@@ -1,0 +1,38 @@
+version: "2.0"
+
+services:
+  db:
+    image: tobi312/rpi-mysql
+    restart: always
+    volumes:
+      - /home/pi/.nc/db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=x7uQJYP2gl
+    env_file:
+      - db.env
+
+  nc:  
+    image: gorofad/rpi-nextcloud-alpine:12.0.3-fpm
+    restart: always
+    volumes:
+      - /home/pi/.nc/nextcloud:/var/www/html
+    environment:
+      - MYSQL_HOST=db
+    env_file:
+      - db.env
+      - nc.env
+    depends_on:
+      - db
+
+  nginx:
+    image: tobi312/rpi-nginx:alpine
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /home/pi/.ssl:/etc/nginx/ssl:ro
+      - /home/pi/.config/nginx:/etc/nginx/conf.d:ro
+      - /home/pi/.nc/nextcloud:/var/www/html
+    depends_on:
+      - nc    
