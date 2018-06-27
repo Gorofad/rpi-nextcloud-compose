@@ -7,7 +7,7 @@ services:
     volumes:
       - /home/pi/.nc/db:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=x7uQJYP2gl
+      - MYSQL_ROOT_PASSWORD=password
     env_file:
       - db.env
 
